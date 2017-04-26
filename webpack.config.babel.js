@@ -27,6 +27,8 @@ module.exports = {
 
 	module: {
 		rules: [
+
+			// CSS loader
 			{
 				test: /\.css$/,
 				use: ExtractTextPlugin.extract({
@@ -35,6 +37,7 @@ module.exports = {
 				})
 			},
 
+			// Js loader
 			{
 				test: /\.js$/,
 				exclude: /(node_modules)/,
