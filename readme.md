@@ -8,8 +8,9 @@ Nastavit Webpack pro vývojové a produkční prostředí není žádný legrace
 * Integrace do stávající aplikace (postavena nad PHP / Nette / Latte tamplates).
 * Automatické generování vstupního souboru aplikace (index.html).
 * Jasné rozdělené development a produkčního prostředí.
-* Reporting pomocí [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer)
+* GZIP compression.
 * [Post CSS + CSS Next](https://github.com/OzzyCzech/webpack2-postcss-cssnext)
+* Reporting pomocí [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer)
 
 ### Instalace
 
