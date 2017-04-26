@@ -1,0 +1,4 @@
+/node_modules/*
+/public/*
+/src/latte/assets.latte
+/stats.json
