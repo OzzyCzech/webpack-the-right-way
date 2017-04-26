@@ -9,7 +9,7 @@ Nastavit Webpack pro vývojové a produkční prostředí není žádný legrace
 * Automatické generování vstupního souboru aplikace (index.html).
 * Jasné rozdělené development a produkčního prostředí.
 * Reporting pomocí [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer)
-* (Post CSS + CSS Next)[https://github.com/OzzyCzech/webpack2-postcss-cssnext]
+* [Post CSS + CSS Next](https://github.com/OzzyCzech/webpack2-postcss-cssnext)
 
 ### Instalace
 
