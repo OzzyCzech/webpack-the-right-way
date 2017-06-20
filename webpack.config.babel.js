@@ -1,25 +1,41 @@
 import path from  'path';
 import webpack from 'webpack';
 import CompressionPlugin from 'compression-webpack-plugin';
+import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import PreloadWebpackPlugin from 'preload-webpack-plugin';
 
-const isDevelopment = !Boolean(process.env.NODE_ENV === 'production');
+const isDev = !Boolean(process.env.NODE_ENV === 'production');
+const isHot = path.basename(require.main.filename) === 'webpack-dev-server.js';
 
-module.exports = {
+const app = {
+
 	context: path.resolve('.'),
+
+	devServer: {
+		contentBase: [path.join(__dirname, 'public')],
+		compress: true,
+		host: 'localhost', // 0.0.0.0 || 127.0.0.1 || localhost || example.dev
+		port: 5000,
+		noInfo: true,
+		overlay: true,
+		disableHostCheck: true,
+		headers: {'Access-Control-Allow-Origin': '*'}
+	},
+
 	entry: {
 		app: './src/app.js'
 	},
 
+	devtool: isDev ? 'cheap-module-eval-source-map' : false,
+
 	output: {
-		publicPath: '/',
-		pathinfo: isDevelopment,
+		publicPath: isHot ? 'http://localhost:5000/' : '/', // @see devServer config
+		pathinfo: isDev,
 		path: path.resolve(__dirname, './public/'),
-		filename: isDevelopment ? 'js/[name].js' : 'js/[name].[chunkhash].js',
-		chunkFilename: isDevelopment ? 'js/[name].js' : 'js/[name].[chunkhash].js'
-	},	
+		filename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js',
+		chunkFilename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js'
+	},
 
 	resolve: {
 		modules: [path.resolve(__dirname, 'src'), 'node_modules']
@@ -27,6 +43,13 @@ module.exports = {
 
 	module: {
 		rules: [
+
+			// JS loader
+			{
+				test: /\.js$/,
+				exclude: /(node_modules|libs)/,
+				use: {loader: 'babel-loader'},
+			},
 
 			// CSS loader
 			{
@@ -37,62 +60,51 @@ module.exports = {
 				})
 			},
 
-			// Js loader
-			{
-				test: /\.js$/,
-				exclude: /(node_modules)/,
-				use: {loader: 'babel-loader'},
-			},
-
-			// Angular templates loader...
+			// Angular HTML template loader
 			{
 				test: /\.html$/,
 				use: {
 					loader: 'file-loader',
-					options: {name: isDevelopment ? 'partials/[name].[ext]' : 'partials/[name].[hash:8].[ext]'}
+					options: {name: isDev ? 'partials/[name].[ext]' : 'partials/[name].[hash:8].[ext]'}
 				}
 			},
-		]		
+
+			// images & fonts loader 
+			{
+				test: /\.(jpe?g|png|gif|webp|eot|ttf|woff|woff2|svg|)$/i,
+				use: [
+					{loader: 'url-loader', options: {limit: 1000, name: 'assets/[name].[hash].[ext]'}}
+				]
+			}
+
+		]
 	},
+
+	stats: isDev ? 'verbose' : 'minimal',
 
 	plugins: [
 
+		// send env to javascript
 		new webpack.DefinePlugin({'env': process.env}), // add process.env to js code
 
-		// Integration with Latte templates...
+		// Default HTML entry point index.html ...
 		new HtmlWebpackPlugin({
-				inject: 'head',
-				filename: '../src/latte/assets.latte',
-				template: '!!raw-loader!./src/assets/assets.latte',
-				chunksSortMode: 'dependency' // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-			}
+					inject: 'head',
+					filename: 'index.html',
+					chunksSortMode: 'dependency', // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+					template: '!!raw-loader!./src/index.html'
+				}
 		),
 
-		// Custom HTML entrypoint...
-		new HtmlWebpackPlugin({
-				inject: 'head',
-				filename: 'index.html',
-				template: '!!raw-loader!./src/assets/index.html',
-				chunksSortMode: 'dependency' // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-			}
-		),
-
-		// Default HTML entrypoint index.html ...
-		// new HtmlWebpackPlugin({
-		// 		inject: 'head',								
-		// 		chunksSortMode: 'dependency' // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-		// 	}
-		// ),
-
-		new PreloadWebpackPlugin(), // Dynamic chunks preload
+		new HtmlWebpackHarddiskPlugin(),
 
 		// extract all node_modules to vendor chunk 
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
 			minChunks: ({resource}) => (
-				resource &&
-				resource.indexOf('node_modules') >= 0 &&
-				resource.match(/\.js$/)
+					resource &&
+					resource.indexOf('node_modules') >= 0 &&
+					resource.match(/\.js$/)
 			)
 		}),
 
@@ -103,9 +115,7 @@ module.exports = {
 			minChunks: Infinity
 		}),
 
-		new webpack.IgnorePlugin(/(locale)/, /moment$/), // skip locale from moment
-
-		// BC: import jQuery to old plugins... ¯\_(ツ)_/¯ 
+		// BC: import jQuery to old plugins... ¯\_(ツ)_/¯
 		new webpack.ProvidePlugin({
 			'$': 'jquery',
 			'jquery': 'jquery',
@@ -115,13 +125,18 @@ module.exports = {
 		}),
 
 		// extract css into its own
-		new ExtractTextPlugin(isDevelopment ? 'css/[name].css' : 'css/[name].[chunkhash].css'),
+		new ExtractTextPlugin({
+					filename: isDev ? 'css/[name].css' : 'css/[name].[contenthash].css',
+					disable: isHot,
+					allChunks: true
+				}
+		),
 
- 		// do nothing on error
+		// do nothing on error
 		new webpack.NoEmitOnErrorsPlugin()
 
 	].concat(
-		isDevelopment ? [				
+			isDev ? [
 				new webpack.NamedModulesPlugin(),
 				new webpack.LoaderOptionsPlugin({debug: true})
 			] : [
@@ -136,14 +151,16 @@ module.exports = {
 
 				// minify js
 				new webpack.optimize.UglifyJsPlugin({
-						compress: {
-							warnings: false
-						},
-						mangle: {
-							except: ['$', 'jQuery'] // do not rename jQuery
+							compress: {
+								warnings: false
+							},
+							mangle: {
+								except: ['$', 'jQuery'] // do not rename jQuery
+							}
 						}
-					}
 				),
 			]
 	)
 };
+
+module.exports = [app];

@@ -1,4 +1,5 @@
 /node_modules/*
 /public/*
-/src/latte/assets.latte
+/offline/*
 /stats.json
+/yarn-error.log
