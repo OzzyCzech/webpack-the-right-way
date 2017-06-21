@@ -114,6 +114,8 @@ Webpack
 
 Doporučuji prostudovat knihu [Survive Webpack](https://survivejs.com/webpack/introduction/) - konfigurace Webpacku nemusí být zrovna triviálné, 
 pokud se do ní ponoříte hlouběji.
+
+// TODO 
  
 ### Odletáme na dovolenou
 
