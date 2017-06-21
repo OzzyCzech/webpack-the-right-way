@@ -29,6 +29,8 @@ const app = {
 
 	devtool: isDev ? 'cheap-module-eval-source-map' : false,
 
+	performance: {hints: isDev ? false : "warning"},
+
 	output: {
 		publicPath: isHot ? 'http://localhost:5000/' : '/', // @see devServer config
 		pathinfo: isDev,
