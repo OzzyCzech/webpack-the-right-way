@@ -4,7 +4,8 @@
   "dependencies": {
     "angular": "^1.6.4",
     "jquery": "^3.2.1",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "postcss-clean": "^1.0.2"
   },
   "scripts": {
     "start": "webpack-dev-server --progress --hot --inline --colors",
@@ -17,7 +18,7 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
-    "babel-loader": "^7.0.0",
+    "babel-loader": "^7.1.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.5.2",
