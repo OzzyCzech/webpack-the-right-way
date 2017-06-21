@@ -39,7 +39,7 @@ uchovávat a verzovat v git. Další výhodou je, že nebudeme tolik závislí n
 Jdeme na věc. Budeme potřebovat [webpack](https://webpack.js.org/) a celou řadu loaderů, [babal](https://babeljs.io/),
 [postcss](http://postcss.org/), [cssnext](http://cssnext.io/) a [webpack-dev-server](https://webpack.js.org/configuration/dev-server/).
 
-Začneme instalací závislostí balíčků:
+Začneme instalací potřebných balíčků:
 
 ```bash
 yarn add babel-cli \
@@ -73,12 +73,12 @@ yarn add babel-cli \
 Hotovo! Přidáme si do `package.json` následující skripty:
      
 ```json
- "scripts": {
-    "start": "webpack-dev-server --progress --hot --inline --colors",
-    "watch": "webpack --watch --progress --devtool cheap-module-eval-source-map",
-    "build": "webpack --devtool source-map",
-    "build:production": "NODE_ENV=production webpack",        
-	},
+"scripts": {
+   "start": "webpack-dev-server --progress --hot --inline --colors",
+   "watch": "webpack --watch --progress --devtool cheap-module-eval-source-map",
+   "build": "webpack --devtool source-map",
+   "build:production": "NODE_ENV=production webpack",        
+},
 ```
 
 Skripty se nám budou později hodit, abychom mohli pomoci `yarn run build` spustit build aplikace nebo nastartovat **webpack-dev-server**.
