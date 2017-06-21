@@ -1,5 +1,5 @@
 {
-  "name": "testomato",
+  "name": "webpack2-the-right-way",
   "private": true,
   "dependencies": {
     "angular": "^1.6.4",

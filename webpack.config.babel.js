@@ -142,9 +142,7 @@ const app = {
 				new webpack.NamedModulesPlugin(),
 				new webpack.LoaderOptionsPlugin({debug: true})
 			] : [
-				//new webpack.HashedModuleIdsPlugin({hashFunction: 'sha256'}),
-				new webpack.NamedModulesPlugin(),
-
+				new webpack.HashedModuleIdsPlugin({hashFunction: 'sha256'}),
 
 				// gzip results
 				new CompressionPlugin({
@@ -153,16 +151,16 @@ const app = {
 					test: /\.(js|css|html)$/
 				}),
 
-				// // minify js
-				// new webpack.optimize.UglifyJsPlugin({
-				// 			compress: {
-				// 				warnings: false
-				// 			},
-				// 			mangle: {
-				// 				except: ['$', 'jQuery'] // do not rename jQuery
-				// 			}
-				// 		}
-				// ),
+				// minify js
+				new webpack.optimize.UglifyJsPlugin({
+							compress: {
+								warnings: false
+							},
+							mangle: {
+								except: ['$', 'jQuery'] // do not rename jQuery
+							}
+						}
+				),
 			]
 	)
 };
