@@ -276,12 +276,12 @@ Pro produkční a vývojové prostředí se bude sada pluginů lišit. To vyře�
 ```javascript
 const app = {
   plugins: [
-      // ZDE budou společné pluginy
+      // ZDE nastavíme společné pluginy
   ].concat(
     isDev ? [
-      // ZDE pluginy pouze pro vývojové prostředí 
+      // ZDE přidáme pluginy pro vývojové prostředí 
     ] : [
-      // ZDE pluginy pro produkční prostředí		
+      // ZDE přidáme pluginy pro produkční prostředí		
     ]
   )
 }
