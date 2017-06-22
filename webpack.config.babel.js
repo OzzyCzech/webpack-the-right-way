@@ -29,14 +29,14 @@ const app = {
 		host: 'localhost', // 0.0.0.0 || 127.0.0.1 || localhost || example.dev
 		port: 5000,
 		noInfo: true,
-		overlay: true,
-		disableHostCheck: true,
-		headers: {'Access-Control-Allow-Origin': '*'}
+		overlay: true, // zobrazeni chyb
 	},
 
 	devtool: isDev ? 'cheap-module-eval-source-map' : false,
 
 	performance: {hints: isDev ? false : "warning"},
+
+	stats: isDev ? 'verbose' : 'minimal',
 
 	resolve: {
 		modules: [path.resolve(__dirname, 'src'), 'node_modules']
@@ -81,12 +81,10 @@ const app = {
 		]
 	},
 
-	stats: isDev ? 'verbose' : 'minimal',
-
 	plugins: [
 
 		// send env to javascript
-		new webpack.DefinePlugin({'env': process.env}), // add process.env to js code
+		new webpack.DefinePlugin({'env': process.env, 'isDev' : isDev}), // add process.env to js code
 
 		// Default HTML entry point index.html ...
 		new HtmlWebpackPlugin({

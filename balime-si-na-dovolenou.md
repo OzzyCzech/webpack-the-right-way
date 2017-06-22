@@ -176,27 +176,46 @@ const app = {
 Všimněte si, že `filename` a `chunkFilename` se pro produkční a vývojové prostředí různí. Řetězec `[chunkhash]` bude 
 Webpackem nahrazen za **jedinečný hash odpovídající sestavení dané části**. Díky tomu bude zajištěno efektivní cachován v prohlížeči.
 Stejně tak bude různá `publicPath`, pokud bude Webpack spuštěn pomocí [dev serveru](https://webpack.js.org/configuration/dev-server/).
-Tak si jej rovnou nastavíme:
+Tak si jej rovnou nastavíme: 
     
 ```javascript
 const app = {
-	// ....
+  // ....
   devServer: {
     contentBase: [path.join(__dirname, 'public')],
     compress: true,
     host: 'localhost', // 0.0.0.0 || 127.0.0.1 || localhost || example.dev
     port: 5000,
     noInfo: true,
-    overlay: true,
-    disableHostCheck: true,
-    headers: {'Access-Control-Allow-Origin': '*'}
-  },
+    overlay: true, // zobrazeni chyb
+  }
 }
 ```
 
-Tady stojí za povšimnutí část `headers: {'Access-Control-Allow-Origin': '*'}`, čímž povolíme cross-origin HTTP request 
-a budeme tak moci Webpack dev server provozovat na libovolné adrese. Content 
+Dále se hodí nastavit [devtool](https://webpack.js.org/configuration/devtool/) - ve vývojovém prostředí chceme co nejvyšší výkon, proto zvolíme `cheap-module-eval-source-map`. 
+Nastavíme [performance](https://webpack.js.org/configuration/performance/) tak, aby nás Webpack pouze varoval, že překračujeme doporučené limity.
+ 
+ [stats](https://webpack.js.org/configuration/stats/)
 
+```javascript
+const app = {
+  // ....
+  devtool: isDev ? 'cheap-module-eval-source-map' : false,
+  performance: {hints: isDev ? false : "warning"},
+  stats: isDev ? 'verbose' : 'minimal',  
+}
+```
+
+Prostřednictvím [resolve](https://webpack.js.org/configuration/resolve/) sdělíme Webpacku, ve kterých složkách má hledat importované soubory: 
+
+```javascript
+const app = {
+  // ....
+	resolve: {
+  		modules: [path.resolve(__dirname, 'src'), 'node_modules']
+ 	},
+}
+```
 
 
 Pokud se chcete do konfigurace Webpack ponořit hlouběji,

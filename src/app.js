@@ -4,6 +4,8 @@ import './style.css';
 
 console.log('App is running...');
 
+console.log(process.env);
+
 const app = angular
 		.module('example', [])
 		.directive('myExampleDirective', ($interval) => {
