@@ -290,11 +290,13 @@ Společné pluginy budou vypadat takto:
 const app = {
   plugins: [    
     new webpack.DefinePlugin({'env': process.env}),
+    // ...
 ```
 
-Plugin `webpack.DefinePlugin` pouze vytvoří v Javascript kódu proměnnou `env`, do které nastaví `env`. 
+Plugin `webpack.DefinePlugin` definuje v Javascriptu globální proměnnou `env`, kterou nastaví hodnotu z aktuálního procesu. 
 
 ```javascript
+		// ...
     new HtmlWebpackPlugin({
           inject: 'head',
           filename: 'index.html',
@@ -302,12 +304,15 @@ Plugin `webpack.DefinePlugin` pouze vytvoří v Javascript kódu proměnnou `env
           template: '!!raw-loader!./src/index.html'
         }
     ),
+    // ...
 ```
 
-Další plugin, `HtmlWebpackPlugin` vygeneruje `index.html`, tedy vstupní bránu do naší aplikace. Všimněte si nastavené `chunksSortMode: 'dependency'`, 
-tímto parametrem určíme jak budou jednotlivé části sposkládány a seřazeny v HTML hlavičce.   
+Další plugin, `HtmlWebpackPlugin` vygeneruje `index.html`, tedy vstupní bránu do naší aplikace. Všimněte si 
+nastavené `chunksSortMode: 'dependency'`, tímto parametrem určíme jak budou jednotlivé části sposkládány 
+a seřazeny v HTML hlavičce. Bez tohoto parametru   
 
-```javascript		   
+```javascript
+		// ...
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: ({resource}) => (
@@ -316,41 +321,46 @@ tímto parametrem určíme jak budou jednotlivé části sposkládány a seřaze
           resource.match(/\.js$/)
       )
     }),
+    // ...
 ```
 
 Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, které se budou importovat z node_modules
 
 
 ```javascript
+		// ...
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
       minChunks: Infinity
     }),
+    // ...
 ```
 
 ```javascript
-    // BC: volitelně jQuery pro starší kód... ¯\_(ツ)_/¯
+		// ...
     new webpack.ProvidePlugin({
       '$': 'jquery',
       'jquery': 'jquery',
       'jQuery': 'jquery',
       'window.$': 'jquery',
-      'window.jQuery': 'jquery'
+      'window.jQuery': 'jquery' // jQuery no ... ¯\_(ツ)_/¯
     }),
+    // ...
 ```
 
 ```javascript
-    // extract css into its own
+    // ...
     new ExtractTextPlugin({
           filename: isDev ? 'css/[name].css' : 'css/[name].[contenthash].css',
           disable: isHot,
           allChunks: true
         }
     ),
+    // ...
 ```
 
 ```javascript
-    // do nothing on error
+		// ...    
     new webpack.NoEmitOnErrorsPlugin()
   ].concat(isDev ? [/* ... */] : [/* ... */])
 }
