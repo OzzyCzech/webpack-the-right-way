@@ -388,7 +388,6 @@ const app = {
   plugins: [ /* ... */].concat(
         isDev ? [
           new webpack.NamedModulesPlugin(),
-          new webpack.LoaderOptionsPlugin({debug: true})
         ] : [
           new webpack.HashedModuleIdsPlugin({hashFunction: 'sha256'}),
    
@@ -414,7 +413,7 @@ const app = {
 }
 ```
 
-HashedModuleIdsPlugin
+Pluginy `webpack.NamedModulesPlugin` a `webpack.HashedModuleIdsPlugin` určují jak bude Webpack označovat při skládán kódu jendotlivé části.
  
 
 
