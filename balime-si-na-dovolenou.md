@@ -263,7 +263,7 @@ const app = {
 }
 ```
 
-Za povšimnutí stojí nastavení parametru `name` u `file-loaderu` pro HTML šablon Angularu a stejný parametr 
+Za povšimnutí stojí nastavení parametru `name` u `file-loaderu` zpracovávající HTML šablon Angularu a stejný parametr 
 pro `url-loaderu`, zpracovávající statické soubory. 
 
 
