@@ -296,7 +296,7 @@ const app = {
 Plugin `webpack.DefinePlugin` definuje v Javascriptu globální proměnnou `env`, kterou nastaví hodnotu z aktuálního procesu. 
 
 ```javascript
-		// ...
+    // ...
     new HtmlWebpackPlugin({
           inject: 'head',
           filename: 'index.html',
@@ -312,7 +312,7 @@ nastavené `chunksSortMode: 'dependency'`, tímto parametrem určíme jak budou 
 a seřazeny v HTML hlavičce. Bez tohoto parametru   
 
 ```javascript
-		// ...
+    // ...
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: ({resource}) => (
@@ -328,7 +328,7 @@ Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, 
 
 
 ```javascript
-		// ...
+    // ...
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
       minChunks: Infinity
@@ -337,7 +337,7 @@ Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, 
 ```
 
 ```javascript
-		// ...
+    // ...
     new webpack.ProvidePlugin({
       '$': 'jquery',
       'jquery': 'jquery',
@@ -360,7 +360,7 @@ Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, 
 ```
 
 ```javascript
-		// ...    
+    // ...    
     new webpack.NoEmitOnErrorsPlugin()
   ].concat(isDev ? [/* ... */] : [/* ... */])
 }
