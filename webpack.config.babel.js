@@ -66,7 +66,7 @@ const app = {
 				test: /\.html$/,
 				use: {
 					loader: 'file-loader',
-					options: {name: isDev ? 'partials/[name].[ext]' : 'partials/[name].[hash:8].[ext]'}
+					options: {name: isDev ? 'partials/[name].[hash:8].[ext]'}
 				}
 			},
 

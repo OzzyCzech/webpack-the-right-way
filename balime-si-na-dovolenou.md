@@ -247,7 +247,7 @@ const app = {
         test: /\.html$/,
         use: {
           loader: 'file-loader',
-          options: {name: isDev ? 'partials/[name].[ext]' : 'partials/[name].[hash:8].[ext]'}
+          options: {name: 'partials/[name].[hash:8].[ext]'}
         }
       },
       
@@ -264,7 +264,8 @@ const app = {
 ```
 
 Za povšimnutí stojí nastavení parametru `name` u `file-loaderu`, který zpracovává HTML šablon Angularu a stejný parametr 
-pro `url-loaderu`, zpracovávající statické soubory. 
+pro `url-loaderu`, zpracovávající statické soubory. Abychom se vyhnuli případným konfliktům v názvech souboru, 
+budem pro veškerá prostředí přidávat k názvům souboru přídávat `[hash]`. 
 
 
 
