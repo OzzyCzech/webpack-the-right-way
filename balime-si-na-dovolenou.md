@@ -269,8 +269,25 @@ pro `url-loaderu`, zpracovávající statické soubory.
 Abychom se vyhnuli případným konfliktům v názvech souboru (stejně pojmenované obrázky) přidáme k názvům souboru
 `[hash]` a pomocí `[ext]` zachováme původní příponu zpracovávaného souboru.  
 
-Pokud se chcete do konfigurace Webpack ponořit hlouběji,
-doporučuji přečíst knihu [Survive Webpack](https://survivejs.com/webpack/introduction/). 
+Na závěr konfigurace nám už jenom stačí nastavit [Webpack plugins](https://webpack.js.org/configuration/plugins/). 
+Pro produkční a vývojové prostředí se bude sada pluginů lišit. To vyřešíme pomocí javascriptu snadno:
+
+
+```javascript
+const app = {
+  plugins: [
+      // ZDE budou společné pluginy
+  ].concat(
+    isDev ? [
+      // ZDE pluginy pouze pro vývojové prostředí 
+    ] : [
+      // ZDE pluginy pro produkční prostředí		
+    ]
+  )
+}
+```
+ 
+Chete se do konfigurace Webpack ponořit ještě hlouběji? Doporučuji přečíst knihu [Survive Webpack](https://survivejs.com/webpack/introduction/). 
 
 ### Odletáme na dovolenou
 
