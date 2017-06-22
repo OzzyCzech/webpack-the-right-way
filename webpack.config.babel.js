@@ -1,7 +1,6 @@
 import path from  'path';
 import webpack from 'webpack';
 import CompressionPlugin from 'compression-webpack-plugin';
-import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
@@ -98,9 +97,7 @@ const app = {
 				}
 		),
 
-		new HtmlWebpackHarddiskPlugin(),
-
-		// extract all node_modules to vendor chunk 
+		// extract all node_modules to vendor chunk
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
 			minChunks: ({resource}) => (

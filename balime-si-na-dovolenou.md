@@ -96,13 +96,13 @@ A ještě konfigurace [postcss](http://postcss.org/). Do souboru `postcss.config
 
 ```javascript
 module.exports = {
-	plugins: {
-		'postcss-import': {},
-		'postcss-cssnext': {
-			browsers: ['last 2 versions', '> 5%'],
-		},
-		'postcss-clean' : {},
-	},
+  plugins: {
+    'postcss-import': {},
+    'postcss-cssnext': {
+      browsers: ['last 2 versions', '> 5%'],
+    },
+    'postcss-clean' : {},
+  },
 };
 ```
 
@@ -110,13 +110,46 @@ Tak a jdeme se ponořit do konfigurace Webpacku.
 
 ### Balíme si zavazadlo
 
-Webpack
+Nakonfigurovat Webpack tak, aby vyhovoval požadavků, které jsme si stanovili na začátku, není úplně triviální. 
+Jdeme se tím společně prokousat!
 
-Doporučuji prostudovat knihu [Survive Webpack](https://survivejs.com/webpack/introduction/) - konfigurace Webpacku nemusí být zrovna triviálné, 
-pokud se do ní ponoříte hlouběji.
+Začneme vytvořením souboru `webpack.config.babel.js` - všimněte si přílepku `*.babel.js` (napadá někoho lepší název?)
+tím zajistíme, aby [Babal](https://babeljs.io/) náš konfigurační soubor za letu přeložil do *ECMAScript 5* a my 
+budeme moci používat pro konfiguraci moderní *ECMAScript 6 syntax*.
 
-// TODO 
- 
+Úvodem konfiguračního souboru naimportujeme potřebné knihovny. Bude se jednat o [Path](https://nodejs.org/api/path.html) 
+z Nodejs, [Webpack](https://github.com/webpack/webpack), [CompressionPlugin](https://github.com/webpack-contrib/compression-webpack-plugin) 
+pro gzip kompresi, [HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin) pro generování vstupního `index.html` a
+[ExtractTextPlugin](https://github.com/webpack-contrib/extract-text-webpack-plugin), který nám pomůže uložit výsledky do souborů.
+
+```javascript
+import path from  'path';
+import webpack from 'webpack';
+import CompressionPlugin from 'compression-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+```
+
+Dále si definujeme dvě konstanty (isDev a isHot), které nám pomohou určit kontext prostředí:
+
+```javascript
+const isDev = !Boolean(process.env.NODE_ENV === 'production');
+const isHot = path.basename(require.main.filename) === 'webpack-dev-server.js';
+```
+
+A jdeme konfigurovat Webpack, což bude spočívat v postupném rozšiřování konstanty `app` o další a další parametry:       
+
+```javascript
+const app = {};
+module.exports = [app];
+```
+
+Nastavte si `context: path.resolve('.'),`
+
+
+Pokud se chcete do konfigurace Webpack ponořit hlouběji,
+doporučuji přečíst knihu [Survive Webpack](https://survivejs.com/webpack/introduction/). 
+
 ### Odletáme na dovolenou
 
 Náš release skript bude velmi jednoduchý. Nejprve získáme poslední soubory:
