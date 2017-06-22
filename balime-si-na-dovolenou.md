@@ -386,29 +386,28 @@ Dále se budou pluginy řídit aktuálním prostředím:
 
 const app = {
   plugins: [ /* ... */].concat(
-        isDev ? [
-          new webpack.NamedModulesPlugin(),
-        ] : [
-          new webpack.HashedModuleIdsPlugin({hashFunction: 'sha256'}),
+    isDev ? [
+      new webpack.NamedModulesPlugin(),
+    ] : [
+      new webpack.HashedModuleIdsPlugin({hashFunction: 'sha256'}),
    
-          // gzip results
-          new CompressionPlugin({
-            asset: '[path].gz[query]',
-            algorithm: 'gzip',
-            test: /\.(js|css|html)$/
-          }),
+      // gzip results
+      new CompressionPlugin({
+        asset: '[path].gz[query]',
+        algorithm: 'gzip',
+        test: /\.(js|css|html)$/
+      }),
    
-          // minify js
-          new webpack.optimize.UglifyJsPlugin({
-                compress: {
-                  warnings: false
-                },
-                mangle: {
-                  except: ['$', 'jQuery'] // do not rename jQuery
-                }
-              }
-          ),
-        ]
+      // minify js
+       new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false
+        },
+        mangle: {
+          except: ['$', 'jQuery'] // do not rename jQuery
+        }
+      }),
+    ]
     )
 }
 ```

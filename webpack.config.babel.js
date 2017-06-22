@@ -70,7 +70,7 @@ const app = {
 				}
 			},
 
-			// images & fonts loader 
+			// images & fonts loader
 			{
 				test: /\.(jpe?g|png|gif|webp|eot|ttf|woff|woff2|svg|)$/i,
 				use: [
@@ -147,14 +147,13 @@ const app = {
 
 				// minify js
 				new webpack.optimize.UglifyJsPlugin({
-							compress: {
-								warnings: false
-							},
-							mangle: {
-								except: ['$', 'jQuery'] // do not rename jQuery
-							}
-						}
-				),
+					compress: {
+						warnings: false
+					},
+					mangle: {
+						except: ['$', 'jQuery'] // do not rename jQuery
+					}
+				}),
 			]
 	)
 };
