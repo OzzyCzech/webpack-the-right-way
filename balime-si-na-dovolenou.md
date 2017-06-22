@@ -263,8 +263,10 @@ const app = {
 }
 ```
 
-Za povšimnutí stojí nastavení parametru `name` u `file-loaderu` pro HTML šablon Angularu a 
-nastavení `name` pro `url-loaderu` zpracovávající statické soubory, jako jsou například fonty nebo obrázky. 
+Za povšimnutí stojí nastavení parametru `name` u `file-loaderu` pro HTML šablon Angularu a stejný parametr 
+pro `url-loaderu`, zpracovávající statické soubory. 
+
+
 
 Pokud se chcete do konfigurace Webpack ponořit hlouběji,
 doporučuji přečíst knihu [Survive Webpack](https://survivejs.com/webpack/introduction/). 
