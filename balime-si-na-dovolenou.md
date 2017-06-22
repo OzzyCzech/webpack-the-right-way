@@ -148,12 +148,12 @@ Nastavíme si [context](https://webpack.js.org/configuration/entry-context/#cont
 
 ```javascript
 const app = {
-	context: path.resolve('.'),
-	entry: { 
-		app: './src/app.js',
-		// backend: './src/admin.js'
-		// main: './src/css/main.css'
-	},
+  context: path.resolve('.'),
+  entry: { 
+    app: './src/app.js',
+    // backend: './src/admin.js'
+    // main: './src/css/main.css'
+  },
 }
 ```
 
@@ -162,7 +162,7 @@ klíčem se pak definuje chunk `[name]`. Toto `[name]` následně použíjeme p�
 
 ```javascript
 const app = {
-	// ... 
+  // ... 
   output: {
    path: path.resolve(__dirname, './public/'),
    pathinfo: isDev, // užitečný pomocník, který přidá do výsledného souboru cestu ke zdrojovému souboru   
@@ -175,7 +175,28 @@ const app = {
 
 Všimněte si, že `filename` a `chunkFilename` se pro produkční a vývojové prostředí různí. Řetězec `[chunkhash]` bude 
 Webpackem nahrazen za **jedinečný hash odpovídající sestavení dané části**. Díky tomu bude zajištěno efektivní cachován v prohlížeči.
-Stejně tak bude různá `publicPath`, pokud bude Webpack spuštěn pomocí dev serveru.   
+Stejně tak bude různá `publicPath`, pokud bude Webpack spuštěn pomocí [dev serveru](https://webpack.js.org/configuration/dev-server/).
+Tak si jej rovnou nastavíme:
+    
+```javascript
+const app = {
+	// ....
+  devServer: {
+    contentBase: [path.join(__dirname, 'public')],
+    compress: true,
+    host: 'localhost', // 0.0.0.0 || 127.0.0.1 || localhost || example.dev
+    port: 5000,
+    noInfo: true,
+    overlay: true,
+    disableHostCheck: true,
+    headers: {'Access-Control-Allow-Origin': '*'}
+  },
+}
+```
+
+Tady stojí za povšimnutí část `headers: {'Access-Control-Allow-Origin': '*'}`, čímž povolíme cross-origin HTTP request 
+a budeme tak moci Webpack dev server provozovat na libovolné adrese. Content 
+
 
 
 Pokud se chcete do konfigurace Webpack ponořit hlouběji,

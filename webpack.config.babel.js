@@ -15,6 +15,14 @@ const app = {
 		app: './src/app.js'
 	},
 
+	output: {
+		path: path.resolve(__dirname, './public/'),
+		pathinfo: isDev,
+		publicPath: isDev && isHot ? 'http://localhost:5000/' : '/',
+		filename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js',
+		chunkFilename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js'
+	},
+
 	devServer: {
 		contentBase: [path.join(__dirname, 'public')],
 		compress: true,
@@ -29,14 +37,6 @@ const app = {
 	devtool: isDev ? 'cheap-module-eval-source-map' : false,
 
 	performance: {hints: isDev ? false : "warning"},
-
-	output: {
-		path: path.resolve(__dirname, './public/'),
-		pathinfo: isDev,
-		publicPath: isDev && isHot ? 'http://localhost:5000/' : '/',
-		filename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js',
-		chunkFilename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js'
-	},
 
 	resolve: {
 		modules: [path.resolve(__dirname, 'src'), 'node_modules']
