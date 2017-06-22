@@ -225,27 +225,35 @@ const app = {
   // ....
   module: {
     rules: [
+      
+      // Javascript  loader
       {
-        test: /\.js$/, // Javascript loader
+        test: /\.js$/,
         exclude: /(node_modules)/,
         use: {loader: 'babel-loader'},
       },
+      
+      // CSS loader
       {
-        test: /\.css$/, // CSS loader
+        test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: "style-loader",
           use: ['css-loader', 'postcss-loader']
         })
       },
+      
+      // Angular HTML template loader
       {
-        test: /\.html$/, // Angular HTML template loader
+        test: /\.html$/,
         use: {
           loader: 'file-loader',
           options: {name: isDev ? 'partials/[name].[ext]' : 'partials/[name].[hash:8].[ext]'}
         }
       },
+      
+      // images & fonts loader 
       {
-        test: /\.(jpe?g|png|gif|webp|eot|ttf|woff|woff2|svg|)$/i, // images & fonts loader
+        test: /\.(jpe?g|png|gif|webp|eot|ttf|woff|woff2|svg|)$/i,
         use: [
           {loader: 'url-loader', options: {limit: 1000, name: 'assets/[name].[hash].[ext]'}}
         ]
