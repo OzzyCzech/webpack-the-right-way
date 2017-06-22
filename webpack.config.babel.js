@@ -11,6 +11,10 @@ const app = {
 
 	context: path.resolve('.'),
 
+	entry: {
+		app: './src/app.js'
+	},
+
 	devServer: {
 		contentBase: [path.join(__dirname, 'public')],
 		compress: true,
@@ -22,18 +26,14 @@ const app = {
 		headers: {'Access-Control-Allow-Origin': '*'}
 	},
 
-	entry: {
-		app: './src/app.js'
-	},
-
 	devtool: isDev ? 'cheap-module-eval-source-map' : false,
 
 	performance: {hints: isDev ? false : "warning"},
 
 	output: {
-		publicPath: isHot ? 'http://localhost:5000/' : '/', // @see devServer config
-		pathinfo: isDev,
 		path: path.resolve(__dirname, './public/'),
+		pathinfo: isDev,
+		publicPath: isDev && isHot ? 'http://localhost:5000/' : '/',
 		filename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js',
 		chunkFilename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js'
 	},

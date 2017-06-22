@@ -137,14 +137,45 @@ const isDev = !Boolean(process.env.NODE_ENV === 'production');
 const isHot = path.basename(require.main.filename) === 'webpack-dev-server.js';
 ```
 
-A jdeme konfigurovat Webpack, což bude spočívat v postupném rozšiřování konstanty `app` o další a další parametry:       
+A jdeme konfigurovat Webpack. To bude spočívat v postupném rozšiřování konstanty `app` o další a další parametry:       
 
 ```javascript
 const app = {};
 module.exports = [app];
 ```
 
-Nastavte si `context: path.resolve('.'),`
+Nastavíme si [context](https://webpack.js.org/configuration/entry-context/#context) a [entry](https://webpack.js.org/configuration/entry-context/#entry).
+
+```javascript
+const app = {
+	context: path.resolve('.'),
+	entry: { 
+		app: './src/app.js',
+		// backend: './src/admin.js'
+		// main: './src/css/main.css'
+	},
+}
+```
+
+Vstupním bodem naší aplikace bude soubor `./src/app.js`. Těchto bodů může být definováno víc, 
+klíčem se pak definuje chunk `[name]`. Toto `[name]` následně použíjeme při [definování názvů souborů](https://survivejs.com/webpack/optimizing/adding-hashes-to-filenames/#placeholders) na výstupu:
+
+```javascript
+const app = {
+	// ... 
+  output: {
+   path: path.resolve(__dirname, './public/'),
+   pathinfo: isDev, // užitečný pomocník, který přidá do výsledného souboru cestu ke zdrojovému souboru   
+   publicPath: isDev && isHot ? 'http://localhost:5000/' : '/',
+   filename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js',
+   chunkFilename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js'
+  },
+}
+```
+
+Všimněte si, že `filename` a `chunkFilename` se pro produkční a vývojové prostředí různí. Řetězec `[chunkhash]` bude 
+Webpackem nahrazen za **jedinečný hash odpovídající sestavení dané části**. Díky tomu bude zajištěno efektivní cachován v prohlížeči.
+Stejně tak bude různá `publicPath`, pokud bude Webpack spuštěn pomocí dev serveru.   
 
 
 Pokud se chcete do konfigurace Webpack ponořit hlouběji,
