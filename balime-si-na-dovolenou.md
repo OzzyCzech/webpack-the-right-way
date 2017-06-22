@@ -293,7 +293,8 @@ const app = {
     // ...
 ```
 
-Plugin `webpack.DefinePlugin` definuje v Javascriptu globální proměnnou `env`, kterou nastaví hodnotu z aktuálního procesu. 
+Nejprve pomocí `webpack.DefinePlugin` definuje v Javascriptu globální proměnnou `env`, kterou nastavíme dle aktuálního procesu.
+Tento plugin považujte za volitený. 
 
 ```javascript
     // ...
@@ -307,34 +308,37 @@ Plugin `webpack.DefinePlugin` definuje v Javascriptu globální proměnnou `env`
     // ...
 ```
 
-Další plugin, `HtmlWebpackPlugin` vygeneruje `index.html`, tedy vstupní bránu do naší aplikace. Všimněte si 
-nastavené `chunksSortMode: 'dependency'`, tímto parametrem určíme jak budou jednotlivé části sposkládány 
-a seřazeny v HTML hlavičce. Bez tohoto parametru   
+Další plugin, [HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin) vygeneruje `index.html`,
+tedy vstupní bránu do naší aplikace. Vygenerovaný HTML soubor bude obsahovat odkazy na všechny vygenerované soubory.
+Všimněte si nastavení `chunksSortMode: 'dependency'`, tímto parametrem určíme jak budou jednotlivé části sposkládány 
+a seřazeny v HTML hlavičce. 
 
 ```javascript
     // ...
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
+      name: 'vendor', // zde definujeme [name]
       minChunks: ({resource}) => (
           resource &&
           resource.indexOf('node_modules') >= 0 &&
           resource.match(/\.js$/)
       )
     }),
-    // ...
-```
-
-Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, které se budou importovat z node_modules
-
-
-```javascript
-    // ...
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
-      minChunks: Infinity
-    }),
+			minChunks: Infinity
+		}),
     // ...
 ```
+
+Plugin `webpack.optimize.CommonsChunkPlugin` použijeme hned dvakrát. Poprvé pomocí tohoto pluginu odělíme
+všechny Javascripty importované z `node_modules` do souboru `vendor.*.js`. Podruhé přesuneme do samostatného souboru 
+`manifest.*.js` kódy, které nám generuje Webpack. Kód generovaný Webpackem se totiž mění prakticky neustále a šel by 
+proti naší snaze zlepšit a prodloužit cachování kódu, který se nemění tak často.     
+
+
+S tímto pluginem se dá udělat řadu dalších kouzel o kterých se dočtete v Kapitole [Bundle Spliting](https://survivejs.com/webpack/building/bundle-splitting/)
+v knize [Survive Webpack](https://survivejs.com/webpack/introduction/).
+
 
 ```javascript
     // ...
@@ -343,10 +347,14 @@ Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, 
       'jquery': 'jquery',
       'jQuery': 'jquery',
       'window.$': 'jquery',
-      'window.jQuery': 'jquery' // jQuery no ... ¯\_(ツ)_/¯
+      'window.jQuery': 'jquery' // jQuery pluginy no ... ¯\_(ツ)_/¯
     }),
     // ...
 ```
+
+Plugin `webpack.ProvidePlugin` zařídí, abychom nemuseli sáhnout do starých kódu a všude přidávat import jQuery.
+Pokud Webpack při zpracování narazí na jQuery, provede to automaticky za nás. Tento plugin je rovněž volitelný, 
+pokud již jQuery nepoužíváte. 
 
 ```javascript
     // ...
@@ -359,6 +367,10 @@ Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, 
     // ...
 ```
 
+Jak jsme již psal v úvodu, kód CSS budeme chtít odělit do statického souboru. Tohle za nás zařídí plugin `ExtractTextPlugin`. 
+Nastavení pluginu má jedno specifikum, tím je `[contenthash]` - chceme totiž, aby soubor měl jedinečné jméno, 
+generované na základě jeho obsahu.      
+
 ```javascript
     // ...    
     new webpack.NoEmitOnErrorsPlugin()
@@ -366,20 +378,48 @@ Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, 
 }
 ```
 
-Posledním společným pluginem bude `webpack.NoEmitOnErrorsPlugin()`, který zamezí generování nových souborů, pokud dojde k nějaké chybě.  
+Posledním společným pluginem bude `webpack.NoEmitOnErrorsPlugin()`, který zamezí generování nových souborů, pokud dojde k nějaké chybě.
+Dále se budou pluginy řídit aktuálním prostředím: 
  
-aktuálného procesu.
 
-Další plugin ``
+```javascript
 
+const app = {
+  plugins: [ /* ... */].concat(
+   			isDev ? [
+   				new webpack.NamedModulesPlugin(),
+   				new webpack.LoaderOptionsPlugin({debug: true})
+   			] : [
+   				new webpack.HashedModuleIdsPlugin({hashFunction: 'sha256'}),
+   
+   				// gzip results
+   				new CompressionPlugin({
+   					asset: '[path].gz[query]',
+   					algorithm: 'gzip',
+   					test: /\.(js|css|html)$/
+   				}),
+   
+   				// minify js
+   				new webpack.optimize.UglifyJsPlugin({
+   							compress: {
+   								warnings: false
+   							},
+   							mangle: {
+   								except: ['$', 'jQuery'] // do not rename jQuery
+   							}
+   						}
+   				),
+   			]
+   	)
+}
+```
 
-Všimněte si dvojtého použití pluginu `webpack.optimize.CommonsChunkPlugin`. Poprvé pomocí tohoto pluginu odělíme
-všechny Javascripty importované z `node_modules` do souboru `vendor.*.js`. Podruhé přesuneme do samostatného souboru 
-`manifest.*.js` kódy, které generuje Webpack. Tento kód se totiž mění prakticky neustále a šel by proti snaze zlepšit 
-cachování kódu, který se nemění tak často.     
-
+HashedModuleIdsPlugin
  
-Chete se do konfigurace Webpack ponořit ještě hlouběji? Doporučuji přečíst knihu [Survive Webpack](https://survivejs.com/webpack/introduction/). 
+
+
+V produkci jsme si slíbili kompimaci obsahu, což nám zařídí `CompressionPlugin` a minifikaci, kterou nám vyřeší `webpack.optimize.UglifyJsPlugin`.
+
 
 ### Odletáme na dovolenou
 
