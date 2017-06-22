@@ -147,9 +147,7 @@ const app = {
 
 				// minify js
 				new webpack.optimize.UglifyJsPlugin({
-					compress: {
-						warnings: false
-					},
+					compress: {warnings: false},
 					mangle: {
 						except: ['$', 'jQuery'] // do not rename jQuery
 					}

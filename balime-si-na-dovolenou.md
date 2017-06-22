@@ -1,20 +1,21 @@
 # Webpack: Balíme si na dovolenou v produkci
 
-V tomto článku bych se rád podíval hlouběji na použití Webpack v produkční prostředí. 
+V tomto článku bych se rád podíval hlouběji na použití Webpack v produkční prostředí. Prošel si jeho nastavení, 
+hezky krok po kroku. Vysvětlil, co a jak udělat, aby naše produkční prostředí ve srovnání s vývojovým prostředím nestrádalo.
    
 ### Předcestovní příprava
 
-V produkčním prostředí potřebujeme neprůstřelné verzování všech statických souborů. Abychom nemuseli řešit,
-že nějaký prohlížeč návštěvníka webu nestáhl poslední verzi Javascript kód a jeho aplikace se z těchto důvodů chová podivně.
-Totéž platí pro CSS soubory, které bychom rádi měli samostatně ve statickém souboru. Zrychlí se tím jeho zpracování 
-a navíc statický soubor si bude prohlížeč schopen uložit do lokální cache.
+V produkčním prostředí potřebujeme neprůstřelné verzování všech souborů. Abychom nemuseli řešit, 
+že nějaký [prohlížeč návštěvníka webu](http://www.refreshyourcache.com/en/home/) si nestáhl naše poslední logo, 
+nebo má stále starší Javascript kód a jeho aplikace se chová jaksi podivně. Stejné nepříjemnosti platí pro CSS soubory, 
+které bychom rádi měli samostatně ve statickém souboru. Zrychlí se tím jejich zpracování a navíc statický soubor 
+si bude prohlížeč schopen uložit do lokální cache.
 
 Javascript třetích stran, jako jsou knihovny a frameworky, obvykle neměníme tak často, narozdíl od kódu naší aplikace. 
 Bude lepší tento kód vyčlenit do samostatného souboru. Navíc tento kód bývá rozsáhlý - klidně několik megabajtů 
-Javascriptu - je zbytečné, aby jej návštěvník stahoval s každou drobnou změnou aplikace znovu.
+Javascriptu - je proto zbytečné, aby jej návštěvník stahoval s každou drobnou změnou aplikace znovu.
 
-Javascript a CSS budeme samozřejmě servírovat minifikovaný. Statické soubory jako obrázky, fonty a podobně opatříme hash,
-abychom byly schopni zajistit jejich správné vydávání.       
+Javascript a CSS budeme samozřejmě servírovat minifikovaný. Statické soubory jako obrázky, fonty budeme verzovat také. 
 
 Protože máme svůj server rádi, ušetříme mu ještě jednu starost. Statický obsah, u kterého to má smysl, proženeme při 
 sestavování aplikace gzip kompresí a uložíme do samostatných souborů. Server tak bude moci rovnou vracet 
@@ -31,14 +32,14 @@ yarn-offline-mirror "./offline"
 yarn-offline-mirror-pruning true
 ```
 
-Adresář `offline` bude obsahovat lokální zálohu všech použitých balíčků. Složku můžeme sdílet mezi servery, nebo ji 
-uchovávat a verzovat v git. Další výhodou je, že nebudeme tolik závislí na funkčnosti yarn registru.  
+Adresář `offline` pak bude obsahovat lokální zálohu všech použitých balíčků. Složku můžeme sdílet mezi servery, nebo ji 
+uchovávat a verzovat v git. Další výhodou je, že už nebudeme tolik závislí na funkčnosti **yarn registru**.  
 
 ### Cestovní dokumenty
 
-Jdeme na věc. Budeme potřebovat [webpack](https://webpack.js.org/) a celou řadu loaderů a pluginů, [babal](https://babeljs.io/),
-[postcss](http://postcss.org/), [cssnext](http://cssnext.io/) a [webpack-dev-server](https://webpack.js.org/configuration/dev-server/). 
-Začneme instalací potřebných balíčků:
+Jdeme na věc. Budeme potřebovat [webpack](https://webpack.js.org/) a celou řadu loaderů a pluginů,
+[babal](https://babeljs.io/), [postcss](http://postcss.org/), [cssnext](http://cssnext.io/) a
+[webpack-dev-server](https://webpack.js.org/configuration/dev-server/). Začneme instalací potřebných balíčků:
 
 ```bash
 yarn add babel-cli \
@@ -80,7 +81,8 @@ Hotovo! Přidáme si do `package.json` následující skripty:
 },
 ```
 
-Skripty se nám budou později hodit, abychom mohli pomoci `yarn run build` spustit build aplikace nebo nastartovat **webpack-dev-server**.
+Skripty se nám budou později hodit, abychom mohli pomoci `yarn run build` spustit build aplikace, 
+nebo nastartovat **webpack-dev-server** pomocí příkazu `yarn run start`.
 
 Než začneme s Webpackem nastavíme si ještě [babal](https://babeljs.io/). Vytvořte si soubor `.babelrc` s následujícím obsahem:
 
@@ -91,7 +93,7 @@ Než začneme s Webpackem nastavíme si ještě [babal](https://babeljs.io/). Vy
 }
 ```
 
-A ještě konfigurace [postcss](http://postcss.org/). Do souboru `postcss.config.js` vložte následující: 
+A ještě přidejte konfiguraci [postcss](http://postcss.org/) do souboru `postcss.config.js`: 
 
 ```javascript
 module.exports = {
@@ -105,20 +107,15 @@ module.exports = {
 };
 ```
 
-A jdeme nastavit [module](https://webpack.js.org/configuration/module/):
-
-
-
-Tak a jdeme se ponořit do konfigurace Webpacku.
+Tak a jdeme se konečně ponořit do konfigurace Webpacku.
 
 ### Balíme si zavazadlo
 
-Nakonfigurovat Webpack tak, aby vyhovoval požadavků, které jsme si stanovili na začátku, není úplně triviální. 
-Jdeme se tím společně prokousat!
+Nakonfigurovat Webpack tak, aby vyhovoval požadavků, které jsme si stanovili na začátku, není úplně triviální.
 
 Začneme vytvořením souboru `webpack.config.babel.js` - všimněte si přílepku `*.babel.js` tím zajistíme,
-aby [Babal](https://babeljs.io/) náš konfigurační soubor za letu přeložil do *ECMAScript 5* a my budeme moci používat 
-pro konfiguraci moderní *ECMAScript 6 syntax*.
+aby [Babal](https://babeljs.io/) náš konfigurační soubor za letu přeložil do *ECMAScript 5* a my budeme moci vesele
+používat při konfiguraci novější *ECMAScript 6 syntax*.
 
 Úvodem konfiguračního souboru naimportujeme potřebné knihovny. Bude se jednat o [Path](https://nodejs.org/api/path.html) 
 z Nodejs, [Webpack](https://github.com/webpack/webpack), [CompressionPlugin](https://github.com/webpack-contrib/compression-webpack-plugin) 
@@ -140,14 +137,14 @@ const isDev = !Boolean(process.env.NODE_ENV === 'production');
 const isHot = path.basename(require.main.filename) === 'webpack-dev-server.js';
 ```
 
-A jdeme konfigurovat Webpack. To bude spočívat v postupném rozšiřování konstanty `app` o další a další parametry:       
+Jdeme konfigurovat Webpack. Jednotlivá nastavení budeme postupně  přidaávat do konstanty `app`:       
 
 ```javascript
 const app = {};
 module.exports = [app];
 ```
 
-Nastavíme si [context](https://webpack.js.org/configuration/entry-context/#context) a [entry](https://webpack.js.org/configuration/entry-context/#entry).
+Nastavíme si [context](https://webpack.js.org/configuration/entry-context/#context) a [entry](https://webpack.js.org/configuration/entry-context/#entry). 
 
 ```javascript
 const app = {
@@ -179,7 +176,8 @@ const app = {
 Všimněte si, že `filename` a `chunkFilename` se pro produkční a vývojové prostředí různí. Řetězec `[chunkhash]` bude 
 Webpackem nahrazen za **jedinečný hash odpovídající sestavení dané části**. Díky tomu bude zajištěno efektivní cachován v prohlížeči.
 Stejně tak bude různá `publicPath`, pokud bude Webpack spuštěn pomocí [dev serveru](https://webpack.js.org/configuration/dev-server/).
-Tak si jej rovnou nastavíme: 
+
+Dev server si můžeme také rovnou nastavit: 
     
 ```javascript
 const app = {
@@ -195,8 +193,10 @@ const app = {
 }
 ```
 
-Dále se hodí nastavit [devtool](https://webpack.js.org/configuration/devtool/). Ve vývojovém prostředí chceme co nejvyšší výkon, proto zvolíme `cheap-module-eval-source-map`. 
-Nastavíme [performance](https://webpack.js.org/configuration/performance/) tak, aby nás Webpack pouze varoval, že překračujeme doporučené limity.
+Dále se hodí nastavit [devtool](https://webpack.js.org/configuration/devtool/).
+Ve vývojovém prostředí chceme co nejvyšší výkon, proto zvolíme `cheap-module-eval-source-map`. 
+Nastavíme [performance](https://webpack.js.org/configuration/performance/) tak,
+aby nás Webpack pouze varoval, že překračujeme doporučené limity.
 A upravíme si pomocí [stats](https://webpack.js.org/configuration/stats/), jaké informace nám bude Webpack vypisovat.
 
 ```javascript
@@ -236,7 +236,8 @@ const app = {
       // CSS loader
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
+        // povšimněte si použití ExtractTextPluginu, budeme jej ještě nastavovat dále
+        use: ExtractTextPlugin.extract({ 
           fallback: "style-loader",
           use: ['css-loader', 'postcss-loader']
         })
@@ -266,20 +267,21 @@ const app = {
 Za povšimnutí stojí nastavení parametru `name` u `file-loaderu` pro HTML šablony Angularu a stejný parametr 
 pro `url-loaderu`, zpracovávající statické soubory.
 
-Abychom se vyhnuli případným konfliktům v názvech souboru (stejně pojmenované obrázky) přidáme k názvům souboru
+Abychom se vyhnuli případným konfliktům v názvech souboru (např. stejně pojmenované obrázky) přidáme k názvům souboru
 `[hash]` a pomocí `[ext]` zachováme původní příponu zpracovávaného souboru.  
 
 Na závěr konfigurace nám už jenom stačí nastavit [Webpack plugins](https://webpack.js.org/configuration/plugins/). 
-Pro produkční a vývojové prostředí se bude sada pluginů lišit. To vyřešíme pomocí Javascriptu snadno:
+Pro produkční a vývojové prostředí se bude sada pluginů lišit. To vyřešíme pomocí Javascriptu snadno: 
 
 
 ```javascript
 const app = {
+  //...
   plugins: [
-    // ZDE nastavíme společné pluginy
+    // ZDE vložíme všechny společné pluginy
   ].concat(
     // a přidáme k nim plugny pro ... 
-    isDev ? [ /* vývojové prostředí */ ] : [ /* nebo produkční prostředí */ ]
+    isDev ? [ /* vývojové prostředí */ ] : [ /* a popřápadě produkční prostředí */ ]
   )
 }
 ```
@@ -288,13 +290,14 @@ Společné pluginy budou vypadat takto:
 
 ```javascript
 const app = {
+  //...
   plugins: [    
     new webpack.DefinePlugin({'env': process.env}),
     // ...
 ```
 
 Nejprve pomocí `webpack.DefinePlugin` definuje v Javascriptu globální proměnnou `env`, kterou nastavíme dle aktuálního procesu.
-Tento plugin považujte za volitený. 
+Toto nastavení považujte za volitelné, jedná se spíš o dobrou praxy. 
 
 ```javascript
     // ...
@@ -311,7 +314,7 @@ Tento plugin považujte za volitený.
 Další plugin, [HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin) vygeneruje `index.html`,
 tedy vstupní bránu do naší aplikace. Vygenerovaný HTML soubor bude obsahovat odkazy na všechny vygenerované soubory.
 Všimněte si nastavení `chunksSortMode: 'dependency'`, tímto parametrem určíme jak budou jednotlivé části sposkládány 
-a seřazeny v HTML hlavičce. 
+a seřazeny v HTML hlavičce vygenerovaného souboru. Jako předlohu použijeme soubor `src/index.html`.
 
 ```javascript
     // ...
@@ -335,10 +338,8 @@ všechny Javascripty importované z `node_modules` do souboru `vendor.*.js`. Pod
 `manifest.*.js` kódy, které nám generuje Webpack. Kód generovaný Webpackem se totiž mění prakticky neustále a šel by 
 proti naší snaze zlepšit a prodloužit cachování kódu, který se nemění tak často.     
 
-
 S tímto pluginem se dá udělat řadu dalších kouzel o kterých se dočtete v Kapitole [Bundle Spliting](https://survivejs.com/webpack/building/bundle-splitting/)
 v knize [Survive Webpack](https://survivejs.com/webpack/introduction/).
-
 
 ```javascript
     // ...
@@ -353,8 +354,8 @@ v knize [Survive Webpack](https://survivejs.com/webpack/introduction/).
 ```
 
 Plugin `webpack.ProvidePlugin` zařídí, abychom nemuseli sáhnout do starých kódu a všude přidávat import jQuery.
-Pokud Webpack při zpracování narazí na jQuery, provede to automaticky za nás. Tento plugin je rovněž volitelný, 
-pokud již jQuery nepoužíváte. 
+Pokud Webpack při zpracování narazí na jQuery, provede to automaticky za nás. Toto nastavení je rovněž volitelné,
+pokud jQuery již nepoužíváte. 
 
 ```javascript
     // ...
@@ -369,7 +370,7 @@ pokud již jQuery nepoužíváte.
 
 Jak jsme již psal v úvodu, kód CSS budeme chtít odělit do statického souboru. Tohle za nás zařídí plugin `ExtractTextPlugin`. 
 Nastavení pluginu má jedno specifikum, tím je `[contenthash]` - chceme totiž, aby soubor měl jedinečné jméno, 
-generované na základě jeho obsahu.      
+generované na základě jeho aktuálního obsahu.
 
 ```javascript
     // ...    
@@ -378,13 +379,13 @@ generované na základě jeho obsahu.
 }
 ```
 
-Posledním společným pluginem bude `webpack.NoEmitOnErrorsPlugin()`, který zamezí generování nových souborů, pokud dojde k nějaké chybě.
-Dále se budou pluginy řídit aktuálním prostředím: 
+Posledním společným pluginem bude `webpack.NoEmitOnErrorsPlugin()`, který zamezí generování nových souborů,
+pokud dojde k nějaké chybě. Další nastavení a pluginy se budou pluginy řídit aktuálním prostředím: 
  
 
 ```javascript
-
 const app = {
+  //...
   plugins: [ /* ... */].concat(
     isDev ? [
       new webpack.NamedModulesPlugin(),
@@ -400,11 +401,9 @@ const app = {
    
       // minify js
        new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false
-        },
+        compress: {warnings: false},
         mangle: {
-          except: ['$', 'jQuery'] // do not rename jQuery
+          except: ['$', 'jQuery'] // nepřejmenuj jQuery
         }
       }),
     ]
@@ -412,12 +411,15 @@ const app = {
 }
 ```
 
-Pluginy `webpack.NamedModulesPlugin` a `webpack.HashedModuleIdsPlugin` určují jak bude Webpack označovat při skládán kódu jendotlivé části.
- 
+Pluginy `webpack.NamedModulesPlugin` a `webpack.HashedModuleIdsPlugin` určují, jak si bude Webpack označovat při
+skládání jednotlivé části kódu.
 
+Na začátku jsme si řekli, že budeme kompimovat a minifikovat obsah, kde to jen půjde. 
+Tohle za nás vyřeší `CompressionPlugin` a `webpack.optimize.UglifyJsPlugin`.
 
-V produkci jsme si slíbili kompimaci obsahu, což nám zařídí `CompressionPlugin` a minifikaci, kterou nám vyřeší `webpack.optimize.UglifyJsPlugin`.
-
+CSS kód budeme minifikovat pomocí `postcss-clean`, který jsme přidali prve do `postcss.config.js`.
+To je vše. Teď stačí spustit `yarn run build` nebo `yarn run build:production`, popřípadě `yarn run start`, 
+pokud se vrhneme do dalšího vývoje naší aplikace.
 
 ### Odletáme na dovolenou
 
@@ -440,4 +442,6 @@ Na závěr přeneseme vytvořené data do složky `/var/www/web/public`:
 rsync -avh ./public /var/www/web --delete-after
 ```
 
-Hotovo. Aplikace běží a my můžeme konečně na dovolenou.
+Hotovo. Aplikace běží a my můžeme konečně na dovolenou. 
+ 
+PS: Všechny kódy jsou veřejně dostupné na https://github.com/OzzyCzech/webpack-the-right-way/
