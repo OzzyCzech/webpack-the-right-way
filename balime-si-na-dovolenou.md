@@ -113,9 +113,9 @@ Tak a jdeme se ponořit do konfigurace Webpacku.
 Nakonfigurovat Webpack tak, aby vyhovoval požadavků, které jsme si stanovili na začátku, není úplně triviální. 
 Jdeme se tím společně prokousat!
 
-Začneme vytvořením souboru `webpack.config.babel.js` - všimněte si přílepku `*.babel.js` (napadá někoho lepší název?)
-tím zajistíme, aby [Babal](https://babeljs.io/) náš konfigurační soubor za letu přeložil do *ECMAScript 5* a my 
-budeme moci používat pro konfiguraci moderní *ECMAScript 6 syntax*.
+Začneme vytvořením souboru `webpack.config.babel.js` - všimněte si přílepku `*.babel.js` tím zajistíme,
+aby [Babal](https://babeljs.io/) náš konfigurační soubor za letu přeložil do *ECMAScript 5* a my budeme moci používat 
+pro konfiguraci moderní *ECMAScript 6 syntax*.
 
 Úvodem konfiguračního souboru naimportujeme potřebné knihovny. Bude se jednat o [Path](https://nodejs.org/api/path.html) 
 z Nodejs, [Webpack](https://github.com/webpack/webpack), [CompressionPlugin](https://github.com/webpack-contrib/compression-webpack-plugin) 
