@@ -265,7 +265,7 @@ const app = {
 
 Za povšimnutí stojí nastavení parametru `name` u `file-loaderu`, který zpracovává HTML šablon Angularu a stejný parametr 
 pro `url-loaderu`, zpracovávající statické soubory. Abychom se vyhnuli případným konfliktům v názvech souboru 
-(stejně pojmenované šablony nebo obrázky) přidáme k názvům `[hash]`. 
+(stejně pojmenované šablony nebo obrázky) přidáme k názvům souboru `[hash]`. 
 
 Pokud se chcete do konfigurace Webpack ponořit hlouběji,
 doporučuji přečíst knihu [Survive Webpack](https://survivejs.com/webpack/introduction/). 
