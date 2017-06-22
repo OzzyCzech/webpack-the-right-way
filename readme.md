@@ -1,4 +1,4 @@
-# Webpack 2.x The Right way
+# Webpack The Right way
 
 
 ### Install
