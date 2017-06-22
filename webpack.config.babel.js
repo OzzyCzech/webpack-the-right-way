@@ -48,7 +48,7 @@ const app = {
 			// JS loader
 			{
 				test: /\.js$/,
-				exclude: /(node_modules|libs)/,
+				exclude: /(node_modules)/,
 				use: {loader: 'babel-loader'},
 			},
 

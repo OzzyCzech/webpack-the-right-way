@@ -105,6 +105,10 @@ module.exports = {
 };
 ```
 
+A jdeme nastavit [module](https://webpack.js.org/configuration/module/):
+
+
+
 Tak a jdeme se ponořit do konfigurace Webpacku.
 
 ### Balíme si zavazadlo
@@ -203,7 +207,6 @@ const app = {
   stats: isDev ? 'verbose' : 'minimal',  
 }
 ```
-
 Prostřednictvím [resolve](https://webpack.js.org/configuration/resolve/) sdělíme Webpacku, ve kterých složkách má hledat importované soubory: 
 
 ```javascript
@@ -211,10 +214,53 @@ const app = {
   // ....
   resolve: {
       modules: [path.resolve(__dirname, 'src'), 'node_modules']
-  },
+  }
 }
 ```
 
+Nastavíme [module](https://webpack.js.org/configuration/module/) pro JS, CSS , HTML a další statický obsah:
+
+```javascript
+const app = {
+  // ....
+  module: {
+    rules: [
+      // JS loader
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {loader: 'babel-loader'},
+      },
+      // CSS loader
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: ['css-loader', 'postcss-loader']
+        })
+      },
+      // Angular HTML template loader
+      {
+        test: /\.html$/,
+        use: {
+          loader: 'file-loader',
+          options: {name: isDev ? 'partials/[name].[ext]' : 'partials/[name].[hash:8].[ext]'}
+        }
+      },
+      // images & fonts loader 
+      {
+        test: /\.(jpe?g|png|gif|webp|eot|ttf|woff|woff2|svg|)$/i,
+        use: [
+          {loader: 'url-loader', options: {limit: 1000, name: 'assets/[name].[hash].[ext]'}}
+        ]
+      }
+    ]
+  }
+}
+```
+
+Za povšimnutí stojí nastavení parametru `name` u `file-loaderu` pro HTML šablon Angularu a 
+nastavení `name` pro `url-loaderu` zpracovávající statické soubory, jako jsou například fonty nebo obrázky. 
 
 Pokud se chcete do konfigurace Webpack ponořit hlouběji,
 doporučuji přečíst knihu [Survive Webpack](https://survivejs.com/webpack/introduction/). 
