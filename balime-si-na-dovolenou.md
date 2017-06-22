@@ -289,19 +289,22 @@ Společné pluginy budou vypadat takto:
 ```javascript
 const app = {
   plugins: [
-    // add process.env to js code
+    // Přidá do výsledného Javascriptu proměnnou env a nastaví ji dle aktuálného procesu (volitelné)
     new webpack.DefinePlugin({'env': process.env}),
+```
+Plugin `webpack.DefinePlugin` pouze vytvoří v Javascript kódu proměnnou `env`, do které nastaví `env`
 
-    // Default HTML entry point index.html ...
+```
+    // Vygeneruje vstupní index.html
     new HtmlWebpackPlugin({
           inject: 'head',
           filename: 'index.html',
-          chunksSortMode: 'dependency', // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+          chunksSortMode: 'dependency',
           template: '!!raw-loader!./src/index.html'
         }
     ),
 
-    // extract all node_modules to vendor chunk
+		// Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, které se budou importovat z node_modules  
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: ({resource}) => (
@@ -311,14 +314,12 @@ const app = {
       )
     }),
 
-    // extract webpack runtime and module manifest to its own file in order to
-    // prevent vendor hash from being updated whenever app bundle is updated
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
       minChunks: Infinity
     }),
 
-    // BC: import jQuery to old plugins... ¯\_(ツ)_/¯
+    // BC: volitelně jQuery pro starší kód... ¯\_(ツ)_/¯
     new webpack.ProvidePlugin({
       '$': 'jquery',
       'jquery': 'jquery',
@@ -340,6 +341,20 @@ const app = {
   ].concat(isDev ? [/* ... */] : [/* ... */])
 }
 ```
+
+ 
+aktuálného procesu.
+
+Další plugin ``
+
+
+Umožňuje řídit, jak mají být fragmenty roztříděny dříve, než jsou zahrnuty do html. Povolené hodnoty: 'none' | 'Auto' | "Závislost" {Function} - výchozí: 'auto'
+
+
+Všimněte si dvojtého použití pluginu `webpack.optimize.CommonsChunkPlugin`. Poprvé pomocí tohoto pluginu odělíme
+všechny Javascripty importované z `node_modules` do souboru `vendor.*.js`. Podruhé přesuneme do samostatného souboru 
+`manifest.*.js` kódy, které generuje Webpack. Tento kód se totiž mění prakticky neustále a šel by proti snaze zlepšit 
+cachování kódu, který se nemění tak často.     
 
  
 Chete se do konfigurace Webpack ponořit ještě hlouběji? Doporučuji přečíst knihu [Survive Webpack](https://survivejs.com/webpack/introduction/). 
