@@ -218,7 +218,7 @@ const app = {
 }
 ```
 
-Nastavíme [module](https://webpack.js.org/configuration/module/) pro JS, CSS , HTML a další statický obsah:
+Nastavíme [module](https://webpack.js.org/configuration/module/) loadery pro JS, CSS, HTML a další statické soubory:
 
 ```javascript
 const app = {
