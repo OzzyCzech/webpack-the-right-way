@@ -83,8 +83,8 @@ const app = {
 
 	plugins: [
 
-		// send env to javascript
-		new webpack.DefinePlugin({'env': process.env, 'isDev' : isDev}), // add process.env to js code
+		// add process.env to js code
+		new webpack.DefinePlugin({'env': process.env}),
 
 		// Default HTML entry point index.html ...
 		new HtmlWebpackPlugin({

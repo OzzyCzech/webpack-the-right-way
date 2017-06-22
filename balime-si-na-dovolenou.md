@@ -270,22 +270,77 @@ Abychom se vyhnuli případným konfliktům v názvech souboru (stejně pojmenov
 `[hash]` a pomocí `[ext]` zachováme původní příponu zpracovávaného souboru.  
 
 Na závěr konfigurace nám už jenom stačí nastavit [Webpack plugins](https://webpack.js.org/configuration/plugins/). 
-Pro produkční a vývojové prostředí se bude sada pluginů lišit. To vyřešíme pomocí javascriptu snadno:
+Pro produkční a vývojové prostředí se bude sada pluginů lišit. To vyřešíme pomocí Javascriptu snadno:
 
 
 ```javascript
 const app = {
   plugins: [
-      // ZDE nastavíme společné pluginy
+    // ZDE nastavíme společné pluginy
   ].concat(
-    isDev ? [
-      // ZDE přidáme pluginy pro vývojové prostředí 
-    ] : [
-      // ZDE přidáme pluginy pro produkční prostředí		
-    ]
+    // a přidáme k nim plugny pro ... 
+    isDev ? [ /* vývojové prostředí */ ] : [ /* nebo produkční prostředí */ ]
   )
 }
 ```
+
+Společné pluginy budou vypadat takto:
+
+```javascript
+const app = {
+  plugins: [
+    // add process.env to js code
+    new webpack.DefinePlugin({'env': process.env}),
+
+    // Default HTML entry point index.html ...
+    new HtmlWebpackPlugin({
+          inject: 'head',
+          filename: 'index.html',
+          chunksSortMode: 'dependency', // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+          template: '!!raw-loader!./src/index.html'
+        }
+    ),
+
+    // extract all node_modules to vendor chunk
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: ({resource}) => (
+          resource &&
+          resource.indexOf('node_modules') >= 0 &&
+          resource.match(/\.js$/)
+      )
+    }),
+
+    // extract webpack runtime and module manifest to its own file in order to
+    // prevent vendor hash from being updated whenever app bundle is updated
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      minChunks: Infinity
+    }),
+
+    // BC: import jQuery to old plugins... ¯\_(ツ)_/¯
+    new webpack.ProvidePlugin({
+      '$': 'jquery',
+      'jquery': 'jquery',
+      'jQuery': 'jquery',
+      'window.$': 'jquery',
+      'window.jQuery': 'jquery'
+    }),
+
+    // extract css into its own
+    new ExtractTextPlugin({
+          filename: isDev ? 'css/[name].css' : 'css/[name].[contenthash].css',
+          disable: isHot,
+          allChunks: true
+        }
+    ),
+
+    // do nothing on error
+    new webpack.NoEmitOnErrorsPlugin()
+  ].concat(isDev ? [/* ... */] : [/* ... */])
+}
+```
+
  
 Chete se do konfigurace Webpack ponořit ještě hlouběji? Doporučuji přečíst knihu [Survive Webpack](https://survivejs.com/webpack/introduction/). 
 
