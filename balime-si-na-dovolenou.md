@@ -210,9 +210,9 @@ Prostřednictvím [resolve](https://webpack.js.org/configuration/resolve/) sděl
 ```javascript
 const app = {
   // ....
-	resolve: {
-  		modules: [path.resolve(__dirname, 'src'), 'node_modules']
- 	},
+  resolve: {
+      modules: [path.resolve(__dirname, 'src'), 'node_modules']
+  },
 }
 ```
 
