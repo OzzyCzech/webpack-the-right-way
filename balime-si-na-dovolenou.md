@@ -36,9 +36,8 @@ uchovávat a verzovat v git. Další výhodou je, že nebudeme tolik závislí n
 
 ### Cestovní dokumenty
 
-Jdeme na věc. Budeme potřebovat [webpack](https://webpack.js.org/) a celou řadu loaderů, [babal](https://babeljs.io/),
-[postcss](http://postcss.org/), [cssnext](http://cssnext.io/) a [webpack-dev-server](https://webpack.js.org/configuration/dev-server/).
-
+Jdeme na věc. Budeme potřebovat [webpack](https://webpack.js.org/) a celou řadu loaderů a pluginů, [babal](https://babeljs.io/),
+[postcss](http://postcss.org/), [cssnext](http://cssnext.io/) a [webpack-dev-server](https://webpack.js.org/configuration/dev-server/). 
 Začneme instalací potřebných balíčků:
 
 ```bash
