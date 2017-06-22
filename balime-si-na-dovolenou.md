@@ -192,10 +192,9 @@ const app = {
 }
 ```
 
-Dále se hodí nastavit [devtool](https://webpack.js.org/configuration/devtool/) - ve vývojovém prostředí chceme co nejvyšší výkon, proto zvolíme `cheap-module-eval-source-map`. 
+Dále se hodí nastavit [devtool](https://webpack.js.org/configuration/devtool/). Ve vývojovém prostředí chceme co nejvyšší výkon, proto zvolíme `cheap-module-eval-source-map`. 
 Nastavíme [performance](https://webpack.js.org/configuration/performance/) tak, aby nás Webpack pouze varoval, že překračujeme doporučené limity.
- 
- [stats](https://webpack.js.org/configuration/stats/)
+A upravíme si pomocí [stats](https://webpack.js.org/configuration/stats/), jaké informace nám bude Webpack vypisovat.
 
 ```javascript
 const app = {
