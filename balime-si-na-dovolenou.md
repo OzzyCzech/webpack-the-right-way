@@ -288,14 +288,13 @@ Společné pluginy budou vypadat takto:
 
 ```javascript
 const app = {
-  plugins: [
-    // Přidá do výsledného Javascriptu proměnnou env a nastaví ji dle aktuálného procesu (volitelné)
+  plugins: [    
     new webpack.DefinePlugin({'env': process.env}),
 ```
-Plugin `webpack.DefinePlugin` pouze vytvoří v Javascript kódu proměnnou `env`, do které nastaví `env`
 
-```
-    // Vygeneruje vstupní index.html
+Plugin `webpack.DefinePlugin` pouze vytvoří v Javascript kódu proměnnou `env`, do které nastaví `env`. 
+
+```javascript
     new HtmlWebpackPlugin({
           inject: 'head',
           filename: 'index.html',
@@ -303,8 +302,12 @@ Plugin `webpack.DefinePlugin` pouze vytvoří v Javascript kódu proměnnou `env
           template: '!!raw-loader!./src/index.html'
         }
     ),
+```
 
-		// Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, které se budou importovat z node_modules  
+Další plugin, `HtmlWebpackPlugin` vygeneruje `index.html`, tedy vstupní bránu do naší aplikace. Všimněte si nastavené `chunksSortMode: 'dependency'`, 
+tímto parametrem určíme jak budou jednotlivé části sposkládány a seřazeny v HTML hlavičce.   
+
+```javascript		   
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: ({resource}) => (
@@ -313,12 +316,19 @@ Plugin `webpack.DefinePlugin` pouze vytvoří v Javascript kódu proměnnou `env
           resource.match(/\.js$/)
       )
     }),
+```
 
+Odělí od našeho kódu do samostaného souboru vendor.*.js všechny JS kódy, které se budou importovat z node_modules
+
+
+```javascript
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
       minChunks: Infinity
     }),
+```
 
+```javascript
     // BC: volitelně jQuery pro starší kód... ¯\_(ツ)_/¯
     new webpack.ProvidePlugin({
       '$': 'jquery',
@@ -327,7 +337,9 @@ Plugin `webpack.DefinePlugin` pouze vytvoří v Javascript kódu proměnnou `env
       'window.$': 'jquery',
       'window.jQuery': 'jquery'
     }),
+```
 
+```javascript
     // extract css into its own
     new ExtractTextPlugin({
           filename: isDev ? 'css/[name].css' : 'css/[name].[contenthash].css',
@@ -335,20 +347,20 @@ Plugin `webpack.DefinePlugin` pouze vytvoří v Javascript kódu proměnnou `env
           allChunks: true
         }
     ),
+```
 
+```javascript
     // do nothing on error
     new webpack.NoEmitOnErrorsPlugin()
   ].concat(isDev ? [/* ... */] : [/* ... */])
 }
 ```
 
+Posledním společným pluginem bude `webpack.NoEmitOnErrorsPlugin()`, který zamezí generování nových souborů, pokud dojde k nějaké chybě.  
  
 aktuálného procesu.
 
 Další plugin ``
-
-
-Umožňuje řídit, jak mají být fragmenty roztříděny dříve, než jsou zahrnuty do html. Povolené hodnoty: 'none' | 'Auto' | "Závislost" {Function} - výchozí: 'auto'
 
 
 Všimněte si dvojtého použití pluginu `webpack.optimize.CommonsChunkPlugin`. Poprvé pomocí tohoto pluginu odělíme
