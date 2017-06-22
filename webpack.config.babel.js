@@ -135,7 +135,6 @@ const app = {
 	].concat(
 			isDev ? [
 				new webpack.NamedModulesPlugin(),
-				new webpack.LoaderOptionsPlugin({debug: true})
 			] : [
 				new webpack.HashedModuleIdsPlugin({hashFunction: 'sha256'}),
 
