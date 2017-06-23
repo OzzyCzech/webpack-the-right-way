@@ -8,11 +8,11 @@
     "postcss-clean": "^1.0.2"
   },
   "scripts": {
-    "start": "webpack-dev-server --progress --hot --inline --colors",
-    "watch": "webpack --watch --progress --devtool cheap-module-eval-source-map",
-    "build": "webpack --devtool source-map",
-    "build:production": "NODE_ENV=production webpack",
-    "report": "NODE_ENV=production webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json",
+    "server": "webpack-dev-server -d --progress --hot --inline --colors",
+    "watch": "webpack -d --progress --watch",
+    "build": "webpack -d",
+    "build:production": "webpack",
+    "report": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json",
     "cleanup": "rm -rf node_modules yarn.lock public offline"
   },
   "devDependencies": {

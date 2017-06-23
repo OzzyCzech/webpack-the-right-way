@@ -7,10 +7,10 @@
 yarn install
 ```
 
-### Development
+### Development mode
 
 ```bash
-yarn run start # create server on localhost:5000
+yarn run server # create server on localhost:5000
 ```
 
 ```bash
@@ -19,10 +19,9 @@ yarn run watch # build & watch
 ```
 
 
-### Production
+### Production mode
 
 ```bash
-yarn install --prefer-offline
 yarn run build:production
 ```
 
@@ -31,6 +30,8 @@ yarn run build:production
 ```bash
 yarn run report
 ```
+
+### Cleanup
 
 ```bash
 yarn run cleanup

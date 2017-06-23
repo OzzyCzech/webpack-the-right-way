@@ -2,13 +2,13 @@ import angular from 'angular';
 import templateUrl from './template.html';
 import './style.css';
 
-console.log('App is running...');
+if (process.env.NODE_ENV !== 'production') console.log('[DEBUG] app is running in DEVELOPMENT MODE');
+if (process.env.NODE_ENV === 'production') console.log('[DEBUG] app is running in PRODUCTION MODE');
 
-console.log(process.env);
 
 const app = angular
 		.module('example', [])
-		.directive('myExampleDirective', ($interval) => {
+		.directive('myExampleDirective', ['$interval', ($interval) => {
 			return {
 				restrict: 'EA',
 				templateUrl: templateUrl,
@@ -18,7 +18,7 @@ const app = angular
 					require.ensure([], function (require) {
 						let moment = require('moment');
 
-						console.log('moment.js was loaded...');
+						console.log('[DEBUG] moment.js was loaded...');
 
 						$interval(() => {
 									scope.time = moment().format("HH:mm:ss");
@@ -27,4 +27,4 @@ const app = angular
 					});
 				}
 			}
-		});
+		}]);

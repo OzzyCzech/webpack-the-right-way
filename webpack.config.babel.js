@@ -4,8 +4,10 @@ import CompressionPlugin from 'compression-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-const isDev = !Boolean(process.env.NODE_ENV === 'production');
 const isHot = path.basename(require.main.filename) === 'webpack-dev-server.js';
+const isDev = isHot || process.argv.indexOf('-d') !== -1;
+
+console.info( '[DEBUG] Webpack running in ' + (isDev ? 'DEVELOPMENT' : 'PRODUCTION') + ' mode');
 
 const app = {
 
@@ -17,8 +19,7 @@ const app = {
 
 	output: {
 		path: path.resolve(__dirname, './public/'),
-		pathinfo: isDev,
-		publicPath: isDev && isHot ? 'http://localhost:5000/' : '/',
+		publicPath: isDev ? 'http://localhost:5000/' : '/',
 		filename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js',
 		chunkFilename: isDev ? 'js/[name].js' : 'js/[name].[chunkhash].js'
 	},
@@ -31,8 +32,6 @@ const app = {
 		noInfo: true,
 		overlay: true, // zobrazeni chyb
 	},
-
-	devtool: isDev ? 'cheap-module-eval-source-map' : false,
 
 	performance: {hints: isDev ? false : "warning"},
 
@@ -82,9 +81,6 @@ const app = {
 	},
 
 	plugins: [
-
-		// add process.env to js code
-		new webpack.DefinePlugin({'env': process.env}),
 
 		// Default HTML entry point index.html ...
 		new HtmlWebpackPlugin({
