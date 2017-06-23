@@ -75,10 +75,10 @@ Hotovo! Do `package.json` si přidáme následující skripty:
      
 ```json
 "scripts": {
-	"server": "webpack-dev-server -d --progress --hot --inline --colors",
+  "server": "webpack-dev-server -d --progress --hot --inline --colors",
   "watch": "webpack -d --progress --watch",
   "build": "webpack -d",
-	"build:production": "webpack"
+  "build:production": "webpack"
 },
 ```
 
