@@ -135,8 +135,8 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 Dále si definujeme dvě konstanty (isDev a isHot), které nám pomohou určit kontext prostředí:
 
 ```javascript
-const isDev = !Boolean(process.env.NODE_ENV === 'production');
 const isHot = path.basename(require.main.filename) === 'webpack-dev-server.js';
+const isDev = isHot || process.argv.indexOf('-d') !== -1;
 ```
 
 Jdeme konfigurovat Webpack. Jednotlivá nastavení budeme postupně  přidaávat do konstanty `app`:       
