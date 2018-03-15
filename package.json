@@ -1,45 +1,44 @@
 {
-  "name": "webpack2-the-right-way",
-  "private": true,
-  "dependencies": {
-    "angular": "^1.6.6",
-    "jquery": "^3.2.1",
-    "moment": "^2.18.1",
-    "postcss-clean": "^1.1.0"
-  },
-  "scripts": {
-    "server": "webpack-dev-server -d --progress --hot --inline --colors",
-    "watch": "webpack -d --progress --watch",
-    "build": "webpack -d",
-    "build:production": "webpack",
-    "report": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json",
-    "cleanup": "rm -rf node_modules yarn.lock public offline"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-runtime": "^6.26.0",
-    "compression-webpack-plugin": "^1.0.0",
-    "css-loader": "^0.28.7",
-    "expose-loader": "^0.7.3",
-    "extract-text-webpack-plugin": "^3.0.0",
-    "file-loader": "^0.11.2",
-    "html-webpack-plugin": "^2.30.1",
-    "postcss": "^6.0.11",
-    "postcss-cssnext": "^3.0.2",
-    "postcss-easy-import": "^3.0.0",
-    "postcss-import": "^11.0.0",
-    "postcss-loader": "^2.0.6",
-    "preload-webpack-plugin": "^2.0.0",
-    "raw-loader": "^0.5.1",
-    "style-loader": "^0.18.2",
-    "url-loader": "^0.5.9",
-    "webpack": "^3.6.0",
-    "webpack-bundle-analyzer": "^2.9.0",
-    "webpack-dev-server": "^2.8.2"
-  }
+	"name": "webpack2-the-right-way",
+	"private": true,
+	"dependencies": {
+		"angular": "^1.6.9",
+		"jquery": "^3.3.1",
+		"moment": "^2.21.0",
+		"postcss-clean": "^1.1.0"
+	},
+	"scripts": {
+		"start": "webpack-dev-server --progress --hot --inline --colors --mode development",
+		"build": "webpack --mode production",
+		"build:dev": "webpack --mode development",
+		"report": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.26.0",
+		"babel-core": "^6.26.0",
+		"babel-loader": "^7.1.4",
+		"babel-plugin-add-module-exports": "^0.2.1",
+		"babel-plugin-transform-runtime": "^6.23.0",
+		"babel-preset-env": "^1.6.1",
+		"babel-runtime": "^6.26.0",
+		"compression-webpack-plugin": "^1.1.11",
+		"css-loader": "^0.28.10",
+		"expose-loader": "^0.7.5",
+		"extract-text-webpack-plugin": "^4.0.0-beta.0",
+		"file-loader": "^1.1.11",
+		"html-webpack-plugin": "^3.0.6",
+		"postcss": "^6.0.19",
+		"postcss-cssnext": "^3.1.0",
+		"postcss-easy-import": "^3.0.0",
+		"postcss-import": "^11.1.0",
+		"postcss-loader": "^2.1.1",
+		"preload-webpack-plugin": "^2.3.0",
+		"raw-loader": "^0.5.1",
+		"style-loader": "^0.20.3",
+		"url-loader": "^1.0.1",
+		"webpack": "^4.1.1",
+		"webpack-bundle-analyzer": "^2.11.1",
+		"webpack-cli": "^2.0.12",
+		"webpack-dev-server": "^3.1.1"
+	}
 }
