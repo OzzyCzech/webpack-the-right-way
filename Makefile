@@ -13,7 +13,6 @@ release:
 	rsync -avhn ./public ../var/www/ --delete-after
 
 clean:
-	rm -rf dist
-
+	rm -rf public
 
 .PHONY: release clean
