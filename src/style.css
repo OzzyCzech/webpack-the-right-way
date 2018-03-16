@@ -1,14 +1,15 @@
 * {
-	padding: 0;
-	margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 body {
-	min-height: 100vh;
-	background: url('ouje.webp') bottom left no-repeat;
-}
+  min-height: 100vh;
+  background: url('ouje.webp') bottom left no-repeat;
 
-h1 {
-	padding: 15px;
-	text-align: right;
+  /* post css */
+  h1 {
+    padding: 15px;
+    text-align: right;
+  }
 }
