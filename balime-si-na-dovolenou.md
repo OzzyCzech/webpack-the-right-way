@@ -42,6 +42,7 @@ Jdeme na věc. Budeme potřebovat [webpack](https://webpack.js.org/) a celou řa
 [babal](https://babeljs.io/), [postcss](http://postcss.org/), [cssnext](http://cssnext.io/) a
 [webpack-dev-server](https://webpack.js.org/configuration/dev-server/). Začneme instalací potřebných balíčků:
 
+
 ```bash
 yarn add babel-cli \
          babel-core  \
