@@ -30,9 +30,3 @@ yarn run build:production
 ```bash
 yarn run report
 ```
-
-### Cleanup
-
-```bash
-yarn run cleanup
-```
