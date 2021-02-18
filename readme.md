@@ -14,8 +14,8 @@ yarn run server # create server on localhost:5000
 ```
 
 ```bash
-yarn run build # build only
-yarn run watch # build & watch
+yarn build # build only
+yarn watch # build & watch
 ```
 
 
