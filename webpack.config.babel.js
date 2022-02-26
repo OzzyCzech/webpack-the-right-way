@@ -4,8 +4,6 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 
-
-
 const isHot = process.argv.indexOf('serve') !== -1; // detect webpack serve
 const isDev = process.argv.indexOf('development') !== -1; // detect --mode development
 
@@ -31,15 +29,12 @@ const app = {
 	},
 
 	devServer: {
-		overlay: true,
-		contentBase: [join(__dirname, "public")],
 		compress: true,
-		host: "localhost", // 0.0.0.0 || 127.0.0.1 || localhost || example.local
-		port: 5000,
-		disableHostCheck: true,
-		allowedHosts: ['testomato.local'],
+		host: "localhost",
+		allowedHosts: 'all',
 		headers: { 'Access-Control-Allow-Origin': '*' },
 		hot: true,
+		port: 5000,
 	},
 
 	module: {
